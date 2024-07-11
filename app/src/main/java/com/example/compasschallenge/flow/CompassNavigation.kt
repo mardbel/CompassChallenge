@@ -43,36 +43,22 @@ private fun NavGraphBuilder.mainNav(appState: CompassAppState) {
             navCommand = NavCommand.ContentType(Feature.MAIN),
             content = {
                 MainScreen(
-                    goToWelcomeScreen = {
-                        appState.navController.navigate(Feature.WELCOME.route) {
-                            popUpTo(Feature.SPLASH.route)
+                    goToResultsScreen  = {
+                        appState.navController.navigate(Feature.RESULTS_SCREEN.route) {
+                            popUpTo(Feature.MAIN.route)
                         }
                     }
                 )
             }
         )
         composable(
-            route = Feature.DOWN_SYSTEM.route,
+            route = Feature.RESULTS_SCREEN.route,
             content = {
-                appState.systemUiController.setSystemBarsColor(color = MaterialTheme.colorScheme.background)
-                /*ResultScreen(
-                    goToSplash = {
-                        appState.navController.navigate(Feature.SPLASH.route) {
-                            popUpTo(Feature.DOWN_SYSTEM.route){
-                                inclusive = true
-                            }
-                        }
-                    },
-                    goToWebView = { url ->
-                        val encodedUrl = URLEncoder.encode(url, StandardCharsets.UTF_8.toString())
-                        appState.navController.navigate(Feature.WEB_VIEW.route + "/${encodedUrl}")
-                    }
-                )*/
+                ResultsScreen()
             }
         )
     }
 }
-
 private fun NavGraphBuilder.composable(
     navCommand: NavCommand,
     content: @Composable (NavBackStackEntry) -> Unit

@@ -5,19 +5,22 @@ import com.example.compasschallenge.utils.UiEvent
 import com.example.compasschallenge.utils.UiState
 
 @Immutable
-sealed class MainScreenUiEvent : UiEvent {
-    data class ShowLoading(val isLoading :Boolean) : MainScreenUiEvent()
+sealed class ResultsScreenUiEvent : UiEvent {
+    data class ShowLoading(val isLoading :Boolean) : ResultsScreenUiEvent()
+    data class EveryTenCharacterRequestHasFinished(val everyTenCharacterRequest : List<String>) : ResultsScreenUiEvent()
+    data class WordCounterRequestHasFinished(val wordCounterRequest : List<String>) : ResultsScreenUiEvent()
 
-    object HideAlertMessage : MainScreenUiEvent()
+    object HideAlertMessage : ResultsScreenUiEvent()
 }
 
 @Immutable
-data class MainScreenState(
+data class ResultsScreenState(
     val showLoading: Boolean = false,
-    //val loggedIn: Boolean? = null,
+    val everyTenCharacterRequest: List<String> = listOf(""),
+    val wordCounterRequest: List<String> = listOf("")
 
     ) : UiState {
     companion object {
-        fun initial() = MainScreenState()
+        fun initial() = ResultsScreenState()
     }
 }

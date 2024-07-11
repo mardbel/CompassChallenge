@@ -10,15 +10,12 @@ import com.example.compasschallenge.flow.CompassApp
 class MainActivity : ComponentActivity() {
 
     private var navController: NavHostController? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
 
             navController = rememberNavController()
             navController?.let { CompassApp(it) }
-
-
         }
     }
 }

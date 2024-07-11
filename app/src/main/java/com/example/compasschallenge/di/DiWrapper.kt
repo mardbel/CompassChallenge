@@ -1,7 +1,8 @@
 package com.example.compasschallenge.di
 
 import android.app.Application
-import com.example.compasschallenge.viewModels.MainViewModel
+import com.example.compasschallenge.viewModels.ResultsViewModel
+import com.example.compasschallenge.viewModels.TextRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -22,7 +23,7 @@ object DiWrapper {
             modules(
                 listOf(
                     moduleViewModels(),
-                    //moduleDatabase()
+                    moduleRepositories()
                 )
             )
         }
@@ -33,7 +34,11 @@ object DiWrapper {
      * [get()] is a Koin extension to inject in your class another dependency also created by Koin
      */
     private fun moduleViewModels() = module {
-        factory { MainViewModel() }
+        factory { ResultsViewModel(get()) }
+    }
+
+    private fun moduleRepositories() = module {
+        factory { TextRepository() }
 
     }
 }

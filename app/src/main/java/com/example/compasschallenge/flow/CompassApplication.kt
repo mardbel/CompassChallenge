@@ -25,7 +25,6 @@ fun CompassApp(
     @Composable
     fun CompassMainScreen(appState: CompassAppState, content: @Composable () -> Unit) {
         CompassAppTheme() {
-            // A surface container using the 'background' color from the theme
             Surface(color = MaterialTheme.colorScheme.primary) {
                 content()
             }
