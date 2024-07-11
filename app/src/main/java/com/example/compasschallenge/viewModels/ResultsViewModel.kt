@@ -9,7 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ResultsViewModel(val textRepository: TextRepository): ViewModel() {
+class ResultsViewModel(private val textRepository: TextRepository): ViewModel() {
     private val reducer = ResultsReducer(ResultsScreenState.initial())
     val state: StateFlow<ResultsScreenState>
         get() = reducer.state
@@ -26,10 +26,11 @@ class ResultsViewModel(val textRepository: TextRepository): ViewModel() {
 
         viewModelScope.launch {
             val everyTenCharacterRequest = everyTenCharacterRequestDeferred.await()
-            reducer.sendEvent(ResultsScreenUiEvent.EveryTenCharacterRequestHasFinished(everyTenCharacterRequest))
             val wordCounterRequest = wordCounterRequestDeferred.await()
-            reducer.sendEvent(ResultsScreenUiEvent.WordCounterRequestHasFinished(wordCounterRequest))
+            reducer.sendEvent(ResultsScreenUiEvent.SomeRequestHasFinished(everyTenCharacterRequest, wordCounterRequest))
         }
+
+        reducer.sendEvent(ResultsScreenUiEvent.ShowLoading(false))
     }
 
     inner class ResultsReducer(initial: ResultsScreenState) :
@@ -40,11 +41,8 @@ class ResultsViewModel(val textRepository: TextRepository): ViewModel() {
                 is ResultsScreenUiEvent.ShowLoading -> {
                     setState(oldState.copy(showLoading = event.isLoading))
                 }
-                is ResultsScreenUiEvent.EveryTenCharacterRequestHasFinished -> {
-                    setState(oldState.copy(everyTenCharacterRequest = event.everyTenCharacterRequest))
-                }
-                is ResultsScreenUiEvent.WordCounterRequestHasFinished -> {
-                    setState(oldState.copy(wordCounterRequest = event.wordCounterRequest))
+                is ResultsScreenUiEvent.SomeRequestHasFinished -> {
+                    setState(oldState.copy(everyTenCharacterRequest = event.everyTenCharacterRequest, wordCounterRequest = event.wordCounterRequest))
                 }
                 else -> { //DO NOTHING}
                 }

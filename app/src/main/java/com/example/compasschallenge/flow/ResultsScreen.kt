@@ -19,8 +19,8 @@ fun ResultsScreen() {
     val viewModel: ResultsViewModel = get()
     val state by viewModel.state.collectAsState()
 
-    val everyTenCharacterList = remember { state.everyTenCharacterRequest }
-    val wordCounterList = remember { state.wordCounterRequest }
+    val everyTenCharacterList = state.everyTenCharacterRequest
+    val wordCounterList = state.wordCounterRequest
     Row {
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
