@@ -77,4 +77,7 @@ dependencies {
     implementation("io.insert-koin:koin-android-compat:3.2.0-beta-1")
     implementation("io.insert-koin:koin-androidx-compose:3.2.0-beta-1")
 
+    // jsoup
+    implementation("org.jsoup:jsoup:1.15.3")
+
 }
