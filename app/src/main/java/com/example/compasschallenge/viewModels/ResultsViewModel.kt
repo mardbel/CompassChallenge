@@ -27,7 +27,8 @@ class ResultsViewModel(private val textRepository: TextRepository): ViewModel() 
         viewModelScope.launch {
             val everyTenCharacterRequest = everyTenCharacterRequestDeferred.await()
             val wordCounterRequest = wordCounterRequestDeferred.await()
-            reducer.sendEvent(ResultsScreenUiEvent.SomeRequestHasFinished(everyTenCharacterRequest, wordCounterRequest))
+            val filtered = everyTenCharacterRequest.filter { it != '\n' && !it.isWhitespace() }
+            reducer.sendEvent(ResultsScreenUiEvent.SomeRequestHasFinished(filtered, wordCounterRequest))
         }
 
         reducer.sendEvent(ResultsScreenUiEvent.ShowLoading(false))
