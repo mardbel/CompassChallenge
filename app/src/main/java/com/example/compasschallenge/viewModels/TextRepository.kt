@@ -21,8 +21,22 @@ class TextRepository {
         }
     }
 
-    suspend fun wordCounterRequest(): List<String> {
-        return listOf("hola11", "chau11")
+    suspend fun wordCounterRequest(): Map<String, Int>  {
+        return withContext(Dispatchers.IO) {
+            try {
+                val document = Jsoup.connect("https://www.compass.com/about").get()
+                val textFromUrl: String = Jsoup.parse(document.html()).text()
+                val wordList = textFromUrl.split(" ")
+                val wordFrequencyMap = wordList
+                    .groupBy { it }
+                    .mapValues { it.value.size } // Count occurrences of each word
+                wordFrequencyMap
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                mapOf("f" to 1)
+            }
+        }
     }
 
     private fun findTens(textFromUrl: String) : List<Char> {

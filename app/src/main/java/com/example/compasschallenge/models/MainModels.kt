@@ -9,7 +9,7 @@ sealed class ResultsScreenUiEvent : UiEvent {
     data class ShowLoading(val isLoading :Boolean) : ResultsScreenUiEvent()
     data class SomeRequestHasFinished(
         val everyTenCharacterRequest : List<Char>,
-        val wordCounterRequest : List<String>) : ResultsScreenUiEvent()
+        val wordCounterRequest : Map<String, Int>) : ResultsScreenUiEvent()
 
     object HideAlertMessage : ResultsScreenUiEvent()
 }
@@ -18,7 +18,7 @@ sealed class ResultsScreenUiEvent : UiEvent {
 data class ResultsScreenState(
     val showLoading: Boolean = false,
     val everyTenCharacterRequest: List<Char> = listOf('d'),
-    val wordCounterRequest: List<String> = listOf("counternull")
+    val wordCounterRequest: Map<String, Int> = mapOf("counternull" to 1)
 
     ) : UiState {
     companion object {
