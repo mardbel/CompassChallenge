@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -30,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -79,5 +80,14 @@ dependencies {
 
     // jsoup
     implementation("org.jsoup:jsoup:1.15.3")
+
+    //test
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    // Kotlin Test
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.6.10")
+    testImplementation( "org.jetbrains.kotlin:kotlin-test-junit:1.6.10")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
 }
