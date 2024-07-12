@@ -1,7 +1,7 @@
 # CompassChallenge
 Android App for Compass Challenge
 
-koin as dependecy injector
-junit for unit tests
-jsoup for web scraping
-compose in the ui
+- Koin as dependency injector
+- JUnit for unit tests
+- Jsoup for web scraping
+- Compose in the UI
