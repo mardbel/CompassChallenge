@@ -2,6 +2,8 @@ package com.example.compasschallenge.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.compasschallenge.flow.EveryTenCharactersUseCase
+import com.example.compasschallenge.flow.WordCounterUseCase
 import com.example.compasschallenge.models.ResultsScreenState
 import com.example.compasschallenge.models.ResultsScreenUiEvent
 import com.example.compasschallenge.utils.Reducer
@@ -9,7 +11,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ResultsViewModel(private val textRepository: TextRepository): ViewModel() {
+class ResultsViewModel(
+    val everyTenCharactersUseCase: EveryTenCharactersUseCase,
+    val wordCounterUseCase: WordCounterUseCase
+): ViewModel() {
     private val reducer = ResultsReducer(ResultsScreenState.initial())
     val state: StateFlow<ResultsScreenState>
         get() = reducer.state
@@ -21,16 +26,12 @@ class ResultsViewModel(private val textRepository: TextRepository): ViewModel() 
     private fun extractTextsFromWeb() {
         reducer.sendEvent(ResultsScreenUiEvent.ShowLoading(true))
 
-        val everyTenCharacterRequestDeferred = viewModelScope.async { textRepository.everyTenCharacterRequest() }
-        val wordCounterRequestDeferred = viewModelScope.async {textRepository.wordCounterRequest() }
-
         viewModelScope.launch {
-            val everyTenCharacterRequest = everyTenCharacterRequestDeferred.await()
-            val wordCounterRequest = wordCounterRequestDeferred.await()
-            val filtered = everyTenCharacterRequest.filter { it != '\n' && !it.isWhitespace() }
-            reducer.sendEvent(ResultsScreenUiEvent.SomeRequestHasFinished(filtered, wordCounterRequest))
+                val filtered = everyTenCharactersUseCase()
+                reducer.sendEvent(ResultsScreenUiEvent.EveryTenRequestHasFinished(filtered))
+                val map = wordCounterUseCase()
+                reducer.sendEvent(ResultsScreenUiEvent.WordFrequencyRequestHasFinished(map))
         }
-
         reducer.sendEvent(ResultsScreenUiEvent.ShowLoading(false))
     }
 
@@ -42,8 +43,11 @@ class ResultsViewModel(private val textRepository: TextRepository): ViewModel() 
                 is ResultsScreenUiEvent.ShowLoading -> {
                     setState(oldState.copy(showLoading = event.isLoading))
                 }
-                is ResultsScreenUiEvent.SomeRequestHasFinished -> {
-                    setState(oldState.copy(everyTenCharacterRequest = event.everyTenCharacterRequest, wordCounterRequest = event.wordCounterRequest))
+                is ResultsScreenUiEvent.EveryTenRequestHasFinished -> {
+                    setState(oldState.copy(everyTenCharacterRequest = event.everyTenCharacterRequest))
+                }
+                is ResultsScreenUiEvent.WordFrequencyRequestHasFinished -> {
+                    setState(oldState.copy(wordCounterRequest = event.wordCounterRequest))
                 }
                 else -> { //DO NOTHING}
                 }

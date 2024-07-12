@@ -1,49 +1,25 @@
 package com.example.compasschallenge.viewModels
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
-class TextRepository {
+class TextRepository(private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
-    suspend fun everyTenCharacterRequest(): List<Char> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val document = Jsoup.connect("https://www.compass.com/about").get()
-                val textFromUrl: String = Jsoup.parse(document.html()).wholeText()
-                val result = findTens(textFromUrl)
-                result
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                listOf('f')
-            }
+    private var cachedTextEveryTen: String = ""
+    suspend fun getCompassAboutText(): String {
+        return withContext(dispatcher) {
+        if (cachedTextEveryTen.isNotEmpty()) return@withContext cachedTextEveryTen
+        try {
+            val document = Jsoup.connect("https://www.compass.com/about").get()
+            val textFromUrl: String = Jsoup.parse(document.html()).wholeText()
+            cachedTextEveryTen = textFromUrl
+            textFromUrl
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
         }
-    }
-
-    suspend fun wordCounterRequest(): Map<String, Int>  {
-        return withContext(Dispatchers.IO) {
-            try {
-                val document = Jsoup.connect("https://www.compass.com/about").get()
-                val textFromUrl: String = Jsoup.parse(document.html()).text()
-                val wordList = textFromUrl.split(" ")
-                val wordFrequencyMap = wordList
-                    .groupBy { it }
-                    .mapValues { it.value.size } // Count occurrences of each word
-                wordFrequencyMap
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                mapOf("f" to 1)
-            }
         }
-    }
-
-    private fun findTens(textFromUrl: String) : List<Char> {
-        val extractedCharacters = mutableListOf<Char>()
-        for (i in textFromUrl.indices step 10) {
-            extractedCharacters.add(textFromUrl[i])
-        }
-        return extractedCharacters
     }
 }
