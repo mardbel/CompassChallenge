@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.viewModel
 
@@ -22,6 +23,7 @@ import org.koin.androidx.compose.viewModel
 @Composable
 fun MainScreen(
     goToResultsScreen: () -> Unit,
+
 ) {
 
     Surface(
@@ -45,16 +47,20 @@ fun LaunchButton(goToResultsScreen: () -> Unit) {
         },
         modifier = Modifier
             .background(Color.Black)
-            .height(40.dp)
-            .width(200.dp),
     ){
         Text(
-            text = "Do your think",
-            modifier = Modifier
-                .background(Color.Black),
+            text = "Retrieve Data",
             color = Color.White,
             maxLines = 2
         )
+    }
+}
+
+@Preview
+@Composable
+fun mainPreview() {
+    LaunchButton {
+
     }
 }
 

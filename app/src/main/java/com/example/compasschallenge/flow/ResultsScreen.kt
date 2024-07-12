@@ -1,10 +1,15 @@
 package com.example.compasschallenge.flow
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -18,12 +23,16 @@ import com.example.compasschallenge.viewModels.ResultsViewModel
 import org.koin.androidx.compose.get
 
 @Composable
-fun ResultsScreen() {
+fun ResultsScreen(onBackPressed: () -> Unit) {
     val viewModel: ResultsViewModel = get()
     val state by viewModel.state.collectAsState()
 
     val everyTenCharacterList = state.everyTenCharacterRequest
     val wordCounterList = state.wordCounterRequest
+
+    BackHandler {
+        onBackPressed.invoke()
+    }
     Row {
         Column(
             modifier = Modifier
@@ -60,9 +69,9 @@ fun ResultsScreen() {
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 items(
-                    items = wordCounterList.keys.toList(),
+                    items = wordCounterList.toList(),
                     itemContent = {
-                        wordFrequencyItem(wordCounterList)
+                        wordFrequencyItem(it)
                     }
                 )
             }
@@ -79,27 +88,22 @@ fun TenCharactersItem(character: Char) {
     }
 }
 @Composable
-fun wordFrequencyItem(map: Map<String, Int>) {
+fun wordFrequencyItem(pair: Pair<String, Int>) {
     Row {
         Column(modifier = Modifier
             .background(Color.Green)
             .padding(16.dp)
             .weight(80F)
         ) {
-
-            map.forEach() {
-                Text(text = it.key)// wordsFrequency.wordsFrequency.k ["hola"].k)
-            }
-
-        }
-        Column(modifier = Modifier
-            .background(Color.Yellow)
-            .padding(16.dp)
-            .weight(20F)
-        ) {
-            map.forEach() {
-                Text(text = it.value.toString())
-            }
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = pair.first)
+                    Spacer(modifier = Modifier
+                        .width(60.dp))
+                    Text(
+                        modifier = Modifier,
+                        text = pair.second.toString())
+                }
         }
     }
 }

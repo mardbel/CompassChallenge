@@ -1,6 +1,8 @@
 package com.example.compasschallenge.di
 
 import android.app.Application
+import com.example.compasschallenge.flow.EveryTenCharactersUseCase
+import com.example.compasschallenge.flow.WordCounterUseCase
 import com.example.compasschallenge.viewModels.ResultsViewModel
 import com.example.compasschallenge.viewModels.TextRepository
 import org.koin.android.ext.koin.androidContext
@@ -11,11 +13,6 @@ import org.koin.dsl.module
 
 object DiWrapper {
 
-    private const val CACHE_DIR = "http-cache"
-
-    /**
-     * Initialize Koin library and load your custom modules
-     */
     fun start(application: Application) {
         startKoin {
             androidContext(application)
@@ -23,22 +20,24 @@ object DiWrapper {
             modules(
                 listOf(
                     moduleViewModels(),
-                    moduleRepositories()
+                    moduleRepositories(),
+                    useCaseModules()
                 )
             )
         }
     }
 
-    /**
-     * whenever you have a new viewmodel, add it to the dependency injection
-     * [get()] is a Koin extension to inject in your class another dependency also created by Koin
-     */
     private fun moduleViewModels() = module {
-        factory { ResultsViewModel(get()) }
+        factory { ResultsViewModel(get(), get()) }
     }
 
     private fun moduleRepositories() = module {
-        factory { TextRepository() }
+        single { TextRepository() }
 
     }
+    private fun useCaseModules() = module {
+        factory { WordCounterUseCase(get()) }
+        factory { EveryTenCharactersUseCase(get()) }
+    }
+
 }

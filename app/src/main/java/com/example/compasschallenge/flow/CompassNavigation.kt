@@ -45,16 +45,19 @@ private fun NavGraphBuilder.mainNav(appState: CompassAppState) {
                 MainScreen(
                     goToResultsScreen  = {
                         appState.navController.navigate(Feature.RESULTS_SCREEN.route) {
-                            popUpTo(Feature.MAIN.route)
                         }
-                    }
+                    },
                 )
             }
         )
         composable(
             route = Feature.RESULTS_SCREEN.route,
             content = {
-                ResultsScreen()
+                ResultsScreen(
+                    onBackPressed = {
+                        appState.navController.popBackStack()
+                    }
+                )
             }
         )
     }

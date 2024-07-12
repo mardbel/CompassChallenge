@@ -7,8 +7,10 @@ import com.example.compasschallenge.utils.UiState
 @Immutable
 sealed class ResultsScreenUiEvent : UiEvent {
     data class ShowLoading(val isLoading :Boolean) : ResultsScreenUiEvent()
-    data class SomeRequestHasFinished(
-        val everyTenCharacterRequest : List<Char>,
+    data class EveryTenRequestHasFinished(
+        val everyTenCharacterRequest : List<Char>) : ResultsScreenUiEvent()
+
+    data class WordFrequencyRequestHasFinished(
         val wordCounterRequest : Map<String, Int>) : ResultsScreenUiEvent()
 
     object HideAlertMessage : ResultsScreenUiEvent()
